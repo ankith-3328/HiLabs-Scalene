@@ -1,7 +1,7 @@
 from datetime import date
 
-from network_mapping.file_quality import Grader, grade_index, npi_valid
-from network_mapping.rate_file import collector
+from rate_pipeline.file_quality import Grader, grade_index, npi_valid
+from rate_pipeline.rate_file import collector
 
 TODAY = date(2026, 10, 17)
 

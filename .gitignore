@@ -224,3 +224,6 @@ output/
 
 # PyCharm
 .idea/
+
+# Presentation notes
+script.md

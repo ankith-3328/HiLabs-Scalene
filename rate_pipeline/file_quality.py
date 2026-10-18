@@ -10,7 +10,7 @@ from collections import Counter
 from datetime import date
 from decimal import Decimal, InvalidOperation
 
-from network_mapping.rate_file import is_outlier, service_medians
+from rate_pipeline.rate_file import is_outlier, service_medians
 
 QUALITY_COLUMNS = ["file", "file_type", "metric", "value", "score", "weight", "how it is calculated"]
 NO_EXPIRY = "9999-12-31"

@@ -35,18 +35,18 @@ from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 
-from network_mapping.address_linking import cms_practice_sites, irs_organizations, link
-from network_mapping.downloader import FetchError, fetch
-from network_mapping.file_quality import Grader, grade_index, npi_valid, quality_report
-from network_mapping.npi_registry import lookup_all
-from network_mapping.plan_index import (
+from rate_pipeline.address_linking import cms_practice_sites, irs_organizations, link
+from rate_pipeline.downloader import FetchError, fetch
+from rate_pipeline.file_quality import Grader, grade_index, npi_valid, quality_report
+from rate_pipeline.npi_registry import lookup_all
+from rate_pipeline.plan_index import (
     US_STATES,
     index_links,
     network_type,
     parse_index,
     state,
 )
-from network_mapping.rate_file import (
+from rate_pipeline.rate_file import (
     collector,
     flatten,
     is_outlier,
@@ -54,10 +54,10 @@ from network_mapping.rate_file import (
     rate_rows,
     service_medians,
 )
-from network_mapping.specialty_lookup import load_nucc, load_supplement, specialty
+from rate_pipeline.specialty_lookup import load_nucc, load_supplement, specialty
 
 PAGE_URL = "https://www.centene.com/price-transparency-files.html"
-SUPPLEMENT = Path(__file__).parent / "network_mapping" / "data" / "hilabs_rate_benchmarking_weights.xlsx"
+SUPPLEMENT = Path(__file__).parent / "rate_pipeline" / "reference_data" / "hilabs_rate_benchmarking_weights.xlsx"
 PLAN_COLUMNS = ["brand", "plan_name", "plan_id", "market_type", "rate_file_url"]
 PROVIDER_RATE_COLUMNS = ["NPI", "TIN", "Billing Code", "Address", "Specialty", "Rate"]
 

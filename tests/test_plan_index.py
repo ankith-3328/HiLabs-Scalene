@@ -1,6 +1,6 @@
 import pytest
 
-from network_mapping.plan_index import (
+from rate_pipeline.plan_index import (
     brand,
     index_links,
     network_type,

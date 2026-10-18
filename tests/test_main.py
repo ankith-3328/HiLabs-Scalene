@@ -9,8 +9,8 @@ import openpyxl
 import pytest
 
 import main
-from network_mapping import downloader, npi_registry
-from network_mapping.downloader import FetchError, fetch
+from rate_pipeline import downloader, npi_registry
+from rate_pipeline.downloader import FetchError, fetch
 
 BASE = "https://www.centene.com/dam/"
 NPPES = "https://npiregistry.cms.hhs.gov/api/?version=2.1&number="

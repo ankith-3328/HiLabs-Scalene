@@ -3,7 +3,7 @@
 These metrics grade every file the pipeline uses: each Centene index file and each in-network rate file.
 
 - **Where the scores are:** every run writes them to the report `output/c3_file_quality.md`: a table of file scores, then for each file every metric's value, its 0–100 score, its weight, and how it was calculated.
-- **Where the code is:** `network_mapping/file_quality.py`.
+- **Where the code is:** `rate_pipeline/file_quality.py`.
 
 ## How a score is built
 

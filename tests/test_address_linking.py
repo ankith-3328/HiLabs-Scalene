@@ -1,8 +1,8 @@
 import json
 from datetime import date, timedelta
 
-from network_mapping import address_linking
-from network_mapping.address_linking import link, location, person_in, same_org
+from rate_pipeline import address_linking
+from rate_pipeline.address_linking import link, location, person_in, same_org
 
 
 def test_location_key_ignores_unit_and_spelling():

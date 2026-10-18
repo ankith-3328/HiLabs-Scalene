@@ -5,7 +5,7 @@ import io
 
 import openpyxl
 
-from network_mapping.downloader import fetch
+from rate_pipeline.downloader import fetch
 
 NUCC_URL = "https://www.nucc.org/images/stories/CSV/nucc_taxonomy_261.csv"
 
