@@ -11,6 +11,7 @@ uv sync                      # install (once)
 uv run main.py               # full run (~16 minutes): index files, rate file, NPI Registry, CMS, IRS
 uv run main.py --index-only  # only C1/C2 and the index file grades (seconds)
 uv run pytest                # run the tests
+uv run streamlit run dashboard.py   # open the dashboard on output/1_ppo_rate_file.xlsx
 ```
 
 The scope is a command-line option, so the same code maps any state, market or network, e.g. `uv run main.py --state OR --network HMO`. The defaults are `--state CA --market group --network PPO`. There are no hardcoded paths: outputs go to `--out` (default `output/`), and the HiLabs supplement is read from `network_mapping/data/`.
@@ -59,6 +60,7 @@ Each run downloads fresh data and overwrites these:
 | File | What it does |
 |---|---|
 | `main.py` | entry point: runs the challenges in order and writes the CSVs |
+| `dashboard.py` | Streamlit dashboard over the rate file: executive and analyst views, cost effectiveness (C7) |
 | `network_mapping/downloader.py` | downloads, with timeouts and retries |
 | `network_mapping/plan_index.py` | index parsing, state rules, network-type rules (C1, C2) |
 | `network_mapping/file_quality.py` | file quality metrics and scores (C3) |
@@ -246,6 +248,15 @@ Rows that can't be used are removed:
 
 - **34,967 rows** in `deliverables/1_ppo_rate_file.xlsx` (a re-run writes `output/1_ppo_rate_file.xlsx`).
 - The headline numbers are in [`4_summary.md`](deliverables/4_summary.md); how each step was done, and why, is in [`2_logic.md`](deliverables/2_logic.md).
+
+## C7: Dashboard
+
+`dashboard.py` is a Streamlit app over the rate file a run writes to `output/1_ppo_rate_file.xlsx`. It reloads when the file changes, so after a new run you only need to refresh the page. To open another rate file, add `-- deliverables/1_ppo_rate_file.xlsx` to the command.
+
+- **Filters (sidebar, apply to every tab):** a search box that matches any column (each word must match), plus specialty, billing code and city.
+- **Executive overview:** headline counts and the median rate, the top specialties, cities and billing codes, and the rates in each cost tier.
+- **Analyst explorer:** every row in a sortable table, with the code median, rate index and cost tier, and a CSV download of the filtered rows.
+- **Cost effectiveness:** each rate is compared with the median rate for the same billing code across the file. *Rate Index* = rate ÷ code median; ±10% counts as at market. The tab shows the share of rates below and above market, the savings if above-market rates were paid the median (per unit of service, because the file has no utilization data), a table of specialties ranked by rate index, the most and least cost-effective providers (those with at least 3 codes), and the rate spread for each billing code.
 
 [eoa]: https://healthnet.com/content/dam/centene/healthnet/pdfs/broker/ca/general/hn-eoa-oe-flyer-2025.pdf
 [salud]: https://media.healthnet.com/content/dam/centene/healthnet/pdfs/broker/ca/salud/hn-broker-salud-flyer-2025.pdf
