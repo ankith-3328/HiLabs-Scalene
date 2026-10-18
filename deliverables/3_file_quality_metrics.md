@@ -7,10 +7,10 @@ These metrics grade every file the pipeline uses: each Centene index file and ea
 
 ## How a score is built
 
-1. **Each metric measures a share** of good or bad rows, e.g. "4% of prices are $0".
+1. **Each metric measures a share** of good or bad rows, e.g. "4% of prices are \$0".
 2. **The share becomes a score from 0 to 100.**
    - No problems scores 100.
-   - The score drops evenly as problems grow, and reaches 0 at a stated **limit**. Example: the limit for $0 prices is 5%, so 4% $0 prices scores 20.
+   - The score drops evenly as problems grow, and reaches 0 at a stated **limit**. Example: the limit for \$0 prices is 5%, so 4% \$0 prices scores 20.
    - A limit is the point where the problem makes the file unusable for that purpose.
 3. **The file score is the weighted average** of its metric scores. Weights reflect how much each metric matters to a contracting team.
 
@@ -22,8 +22,8 @@ The rate file is graded while it is read, so even a very large file is never loa
 |---|---:|---|---|
 | Freshness | 10 | Days between the file's `last_updated_on` and the run date. The score is 100 within 35 days, falling linearly to 0 at 365 days | The rule requires monthly publication. An old file means old contracts |
 | Expired rates | 5 | Share of rate rows whose `expiration_date` is before the run date; `9999-12-31` means no expiry. Tolerance 10% | An expired rate is no longer payable, so it can't be benchmarked |
-| $0, negative or unreadable rates | 20 | Share of rate rows with `negotiated_rate` ≤ 0 or not a number. Tolerance 5% | These are placeholders, not prices, and they corrupt any average |
-| Outlier rates | 15 | Share of providers' distinct **CPT/HCPCS** rates that are **more than 10× or less than one-tenth of the typical price**. The typical price is the median of all providers' rates for the same code + billing class + modifier, and needs at least 3 rates. Hospital revenue-code (RC) rates are not judged. Tolerance 10% | Catches data errors: an ECG reading at $475 when the typical price is $17, or a blood draw at $290 vs $13. Normal price differences between providers (2–3×) are never flagged. A revenue code is a hospital cost centre covering many different services (RC 300 covers every lab test, $5 to $8,000), so its rates can't be compared this way. The same rule removes outliers from the rate file (C4) |
+| \$0, negative or unreadable rates | 20 | Share of rate rows with `negotiated_rate` ≤ 0 or not a number. Tolerance 5% | These are placeholders, not prices, and they corrupt any average |
+| Outlier rates | 15 | Share of providers' distinct **CPT/HCPCS** rates that are **more than 10× or less than one-tenth of the typical price**. The typical price is the median of all providers' rates for the same code + billing class + modifier, and needs at least 3 rates. Hospital revenue-code (RC) rates are not judged. Tolerance 10% | Catches data errors: an ECG reading at \$475 when the typical price is \$17, or a blood draw at \$290 vs \$13. Normal price differences between providers (2–3×) are never flagged. A revenue code is a hospital cost centre covering many different services (RC 300 covers every lab test, \$5 to \$8,000), so its rates can't be compared this way. The same rule removes outliers from the rate file (C4) |
 | Duplicate prices | 5 | Share of rate rows repeating a price already listed for the same NPI, TIN, code, billing class, setting, modifier, place of service and extra code (description text ignored). The strict count, identical in every field, is reported alongside. Tolerance 10% | Duplicates inflate counts and weight averages unfairly |
 | Conflicting rates | 15 | Share of NPI + TIN + billing code keys with more than one distinct rate. Tolerance 25% | When one provider has several prices for the same code, a contracting team can't tell which one applies |
 | **Code coverage** (HiLabs weights) | 20 | Each NPI gets a HiLabs specialty, through the Taxonomy-Spec crosswalk. For each specialty with providers in the file, take the **Spec-Proc-weighted share of its key procedures that are priced for those providers**. Then average across specialties using the **Specialty Weights**. A second value reports how many of all specialties' key codes are priced anywhere in the file | A file can be large and still miss the services that drive spend. This measures coverage of what matters, as defined by HiLabs' own weights |
@@ -46,7 +46,7 @@ The rate file is graded while it is read, so even a very large file is never loa
 |---|---|---:|---:|
 | freshness | last updated on 2026-10-06 | 100 | 10 |
 | expired rates | 0.00% | 100.0 | 5 |
-| $0, negative or unreadable rates | 0.00% | 100.0 | 20 |
+| \$0, negative or unreadable rates | 0.00% | 100.0 | 20 |
 | outlier rates | 0.75% of 14,178 CPT/HCPCS provider rates | 92.5 | 15 |
 | duplicate prices | 97.58% repeat a price already listed for the same provider and service; 43.52% are identical in every field | 0.0 | 5 |
 | conflicting rates | 13.78% of 21,858 NPI+TIN+code keys | 44.9 | 15 |
@@ -54,7 +54,7 @@ The rate file is graded while it is read, so even a very large file is never loa
 | provider validity | 99.76% of 3,735 NPIs | 99.8 | 10 |
 
 **What the score says:**
-- **Strengths:** the file is fresh (last updated on 2026-10-06), has no $0, expired or unreadable rates, and valid providers. Only 0.75% of procedure rates are outliers.
+- **Strengths:** the file is fresh (last updated on 2026-10-06), has no \$0, expired or unreadable rates, and valid providers. Only 0.75% of procedure rates are outliers.
 - **Weaknesses:**
   - **Massive repetition:** 97.6% of rows repeat a price already listed for the same provider and service, and 43.5% are identical in every field. For example, one home-health code (RC 23 + HIPPS 1EA11) carries the same price under 43 different descriptions, so the descriptions don't reliably match the codes.
   - **Conflicting rates:** 13.8% of NPI + TIN + code keys have several rates.

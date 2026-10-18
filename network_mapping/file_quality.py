@@ -190,7 +190,7 @@ def _id_matches(plan_id, id_type):
 def quality_report(rows):
     """Markdown report of the metric rows (QUALITY_COLUMNS): a score table, then each file's metrics."""
     def cell(v):
-        return str(v).replace("|", "\\|").replace("\n", " ")
+        return str(v).replace("|", "\\|").replace("$", "\\$").replace("\n", " ")
 
     def name(url):
         return url.rstrip("/").rsplit("/", 1)[-1].replace("%20", " ")

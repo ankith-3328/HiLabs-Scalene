@@ -292,7 +292,7 @@ def rate_rows(groups, providers, links, medians):
 
     links: {(tin, npi): [link rows from addresses.link]}; medians: from service_medians.
     Outlier rates are left out; one of the remaining rates is picked by choose_rate, with
-    how it was picked beside it.
+    how it was picked beside it, and the lowest and highest of them are kept as Min and Max Rate.
     """
     standards = standard_settings(groups)
     rows = []
@@ -301,6 +301,7 @@ def rate_rows(groups, providers, links, medians):
         outliers = sum(1 for rate, svc in g["rates"] if is_outlier(rate, medians.get(svc)))
         kept = {v: c for v, c in g["entries"].items() if not is_outlier(v[0], medians.get(v[1]))}
         rate, how = choose_rate(kept, standards.get((code_type, code))) if kept else ("", "")
+        kept_rates = [v[0] for v in kept]
         descriptions = sorted(g["descriptions"])
         excluded = "; ".join(f"{n} {text} rate(s) excluded" for n, text in
                              ((g["unreadable"], "unreadable"), (g["zero"], "$0 or negative"),
@@ -309,6 +310,8 @@ def rate_rows(groups, providers, links, medians):
         common = {
             "NPI": npi, "TIN": tin, "Billing Code": code, "Specialty": p.get("specialty", ""),
             "Rate": str(rate),
+            "Min Rate": str(min(kept_rates)) if kept_rates else "",
+            "Max Rate": str(max(kept_rates)) if kept_rates else "",
             "NPI Type": p.get("npi_type", ""), "Provider Name": p.get("name", ""),
             "Billing Code Type": code_type,
             "Description": descriptions[0] if len(descriptions) == 1
