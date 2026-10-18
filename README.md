@@ -39,7 +39,7 @@ Each run downloads fresh data and overwrites these:
 | `c1_index_plans.csv` | C1 | every plan in every Centene index file: `brand, plan_name, plan_id, market_type, rate_file_url` |
 | `c2_ppo_plans.csv` | C2 | the California commercial group **PPO** plans, with the reason and their rate file |
 | `c3_file_quality.md` | C3 | quality report: the score of every file used, then each metric's value, score, weight and calculation |
-| `c4_ppo_rates.csv` | C4 | `NPI, TIN, Billing Code, Rate`: the rate chosen (most frequent) for each NPI + TIN + billing code |
+| `c4_ppo_rates.csv` | C4 | `NPI, TIN, Billing Code, Rate, Min Rate, Max Rate`: the rate chosen (most frequent) for each NPI + TIN + billing code, and the lowest and highest of its rates after outliers are removed |
 | `c5_ppo_rates_by_address.csv` | C5 | `NPI, TIN, Billing Code, Address, Specialty, Rate, Address Confidence`: the C4 rates at every address linked to the NPI and TIN, with the address's confidence (high, medium or low) |
 | `1_ppo_rate_file.xlsx` | C6 | this run's rate file (deliverable 1) |
 
@@ -179,6 +179,8 @@ For each NPI + TIN + billing code, one rate is kept:
 - **Select the most frequent rate:** Choose the rate appearing in the most provider contracts.
 - **Break ties using the lower median:** If multiple rates are equally frequent, select the lowest median.
 
+`Min Rate` and `Max Rate` are the lowest and highest of the key's rates after outliers are removed, so the spread around the chosen rate is visible. When a key has only one rate, all three are the same.
+
 **Rationale:**
 - **Traceability:** Every selected rate is an actual published price.
 - **Representativeness:** The most frequent rate reflects the provider's standard contracted price.
@@ -188,7 +190,7 @@ For each NPI + TIN + billing code, one rate is kept:
 - **1,500,288 prices** read from the rate file.
 - **106 outlier rates** excluded (over 10× or under one-tenth of the typical price).
 - **3,011 of 21,858** NPI + TIN + code keys had several rates; one was picked for each.
-- **21,750 rows** in `c4_ppo_rates.csv`: `NPI, TIN, Billing Code, Rate`.
+- **21,750 rows** in `c4_ppo_rates.csv`: `NPI, TIN, Billing Code, Rate, Min Rate, Max Rate`.
 
 ## C5: Map TIN → NPI → address
 

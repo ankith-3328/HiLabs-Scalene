@@ -93,10 +93,12 @@ def test_rate_rows_one_per_npi_tin_address_code_with_conflicts_summarised(tmp_pa
     # $100 and $80 in one contract each: a tie, so the lower median, a published rate (not $90)
     assert v["Rate"] == "80.0"
     assert v["Rate Choice"] == "tie between 2 rates: lower median"
+    assert (v["Min Rate"], v["Max Rate"]) == ("80.0", "100.0")
     assert (v["Specialty"], v["Billing Code"], v["Address Confidence"]) == ("Lab", "99213", "high")
     by_npi = {r["NPI"]: r for r in rows}
     # the typical price for 99213 here is $80: the $1 and $2 rates are under 1/10 of it, so excluded
     assert (by_npi[""]["Rate"], by_npi["4444444444"]["Rate"]) == ("", "")
+    assert (by_npi["4444444444"]["Min Rate"], by_npi["4444444444"]["Max Rate"]) == ("", "")
     assert "1 outlier" in by_npi[""]["Note"]
     assert (by_npi["2222222222"]["Address"], by_npi["2222222222"]["Address Confidence"]) == ("", "none")
 

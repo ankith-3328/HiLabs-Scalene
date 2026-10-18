@@ -147,7 +147,8 @@ def test_end_to_end_writes_the_outputs_and_reruns_identically(tmp_path, monkeypa
 
     # C4-C6: the placeholder NPI 0 is left out of all three
     assert _csv(out / "c4_ppo_rates.csv") == [
-        {"NPI": "1770688129", "TIN": "68-0273974", "Billing Code": "10040", "Rate": "150.61"}]
+        {"NPI": "1770688129", "TIN": "68-0273974", "Billing Code": "10040", "Rate": "150.61",
+         "Min Rate": "150.61", "Max Rate": "150.61"}]
     row = {"NPI": "1770688129", "TIN": "68-0273974", "Billing Code": "10040",
            "Address": "1 MAIN ST, SACRAMENTO, CA 95816", "Specialty": "Clinical Medical Laboratory", "Rate": "150.61"}
     assert _csv(out / "c5_ppo_rates_by_address.csv") == [{**row, "Address Confidence": "medium"}]

@@ -85,12 +85,12 @@ Every index file and the PPO rate file get a 0–100 quality score. The metrics,
 
 The rate file can list several rates for the same NPI + TIN + billing code. One rate is kept for each:
 
-1. **Remove bad rates:** not a number, $0 or negative, or expired. (None in this file.)
+1. **Remove bad rates:** not a number, \$0 or negative, or expired. (None in this file.)
 2. **Remove outliers:** a procedure (CPT/HCPCS) rate more than **10× or under one-tenth of the typical price** for the same service.
    - The typical price is the median of all providers' rates for the same code, billing class and modifier. At least 3 rates are needed.
-   - Example: an ECG reading at $475 when the typical price is $17.
+   - Example: an ECG reading at \$475 when the typical price is \$17.
    - Normal differences between providers (2–3×) are kept.
-   - Hospital revenue codes are not checked. A revenue code covers many services (RC 300 covers every lab test, $5 to $8,000), so it has no typical price.
+   - Hospital revenue codes are not checked. A revenue code covers many services (RC 300 covers every lab test, \$5 to \$8,000), so it has no typical price.
 3. **One rate left:** keep it.
 4. **Several rates left** (3,011 of 21,858 keys): pick one in this order:
    1. **Standard version of the service:** rates with no modifier first, then the most common billing class and setting for that code.
@@ -98,11 +98,13 @@ The rate file can list several rates for the same NPI + TIN + billing code. One 
    3. **Tie:** the lower median of the tied rates.
 
 **Why not a plain median?**
-- **Every rate is a real published price.** A median of $80 and $100 is $90, which no contract has. Every rate we keep can be found in Centene's file.
-- **Like is compared with like.** Many "different" rates are different versions of a service. Code 71045 alone is the full fee; 71045-26 is only the doctor's part. Choosing the standard version first avoids mixing them.
+- **Every rate is a real published price.** A median of \$80 and \$100 is \$90, which no contract has. Every rate we keep can be found in Centene's file.
+- Many "different" rates are different versions of a service. Code 71045 alone is the full fee; 71045-26 is only the doctor's part. Choosing the standard version first avoids mixing them.
 - **The most common rate is the provider's standard price.** A rate used in most contracts is the fee schedule; a rate in one contract is the exception.
 
-Output: `c4_ppo_rates.csv` (NPI, TIN, Billing Code, Rate): 21,750 rows.
+**Min and max rate:** next to the chosen rate, `Min Rate` and `Max Rate` are the lowest and highest of the key's rates after steps 1 and 2 (bad rates and outliers removed). They show how far the provider's rates for the code spread around the chosen one. With one rate left, all three are the same.
+
+Output: `c4_ppo_rates.csv` (NPI, TIN, Billing Code, Rate, Min Rate, Max Rate): 21,750 rows.
 
 ## C5: Map TIN → NPI → address
 

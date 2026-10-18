@@ -6,7 +6,8 @@ Writes to output/:
   c1_index_plans.csv            C1  every plan in every Centene index file (duplicates removed)
   c2_ppo_plans.csv              C2  the in-scope plans of the target network type
   c3_file_quality.md            C3  quality metrics and scores for every file used
-  c4_ppo_rates.csv              C4  NPI, TIN, billing code and the rate chosen for them
+  c4_ppo_rates.csv              C4  NPI, TIN, billing code, the rate chosen for them, and the min and
+                                    max of their rates after outliers are removed
   c5_ppo_rates_by_address.csv   C5  the C4 rates with every linked address, its confidence and the specialty
 
     uv run main.py                                    # full run
@@ -245,7 +246,7 @@ def main(argv=None):
                 removed["no address in any source"] += 1
 
         c4 = unique(rated, ["NPI", "TIN", "Billing Code"])
-        write_csv(out / f"c4_{net}_rates.csv", ["NPI", "TIN", "Billing Code", "Rate"], c4)
+        write_csv(out / f"c4_{net}_rates.csv", ["NPI", "TIN", "Billing Code", "Rate", "Min Rate", "Max Rate"], c4)
         c5 = unique(rows, PROVIDER_RATE_COLUMNS)
         write_csv(out / f"c5_{net}_rates_by_address.csv", [*PROVIDER_RATE_COLUMNS, "Address Confidence"], c5)
         c6 = unique(rows, ["NPI", "TIN", "Address", "Billing Code"])
