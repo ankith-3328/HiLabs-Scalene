@@ -9,7 +9,6 @@ Finds Centene's PPO network in its price transparency files, grades the files' q
 ```bash
 uv sync                      # install (once)
 uv run main.py               # full run (~16 minutes): index files, rate file, NPI Registry, CMS, IRS
-uv run main.py --index-only  # only C1/C2 and the index file grades (seconds)
 uv run pytest                # run the tests
 uv run streamlit run dashboard.py   # open the dashboard on output/1_ppo_rate_file.xlsx
 ```
