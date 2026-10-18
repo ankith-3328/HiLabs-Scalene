@@ -26,7 +26,7 @@
 | S6 | CMS Doctors & Clinicians file (data.cms.gov, monthly, from Medicare enrollment) | where each clinician practises, and every active practice address (327,028) | C5 |
 | S7 | IRS Exempt Organizations file | legal name and registered address of non-profit TINs (152 found) | C5 |
 | S8 | NUCC taxonomy code set | taxonomy code → specialty name | C5 |
-| S9 | HiLabs workbook (`network_mapping/data/hilabs_rate_benchmarking_weights.xlsx`) | taxonomy → HiLabs specialty; specialty and procedure weights | C3, C5 |
+| S9 | HiLabs workbook (`rate_pipeline/reference_data/hilabs_rate_benchmarking_weights.xlsx`) | taxonomy → HiLabs specialty; specialty and procedure weights | C3, C5 |
 
 The Centene files are dated 2026-09-28 to 2026-10-06. Every run downloads the sources fresh; the same source data always gives the same outputs.
 

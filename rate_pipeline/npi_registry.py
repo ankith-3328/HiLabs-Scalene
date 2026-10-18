@@ -4,8 +4,8 @@ import json
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-from network_mapping.address_linking import location
-from network_mapping.downloader import FetchError, fetch
+from rate_pipeline.address_linking import location
+from rate_pipeline.downloader import FetchError, fetch
 
 API = "https://npiregistry.cms.hhs.gov/api/?version=2.1&number={npi}"
 WORKERS = 8  # parallel lookups, modest enough for a public API

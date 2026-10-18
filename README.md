@@ -14,7 +14,7 @@ uv run pytest                # run the tests
 uv run streamlit run dashboard.py   # open the dashboard on output/1_ppo_rate_file.xlsx
 ```
 
-The scope is a command-line option, so the same code maps any state, market or network, e.g. `uv run main.py --state OR --network HMO`. The defaults are `--state CA --market group --network PPO`. There are no hardcoded paths: outputs go to `--out` (default `output/`), and the HiLabs supplement is read from `network_mapping/data/`.
+The scope is a command-line option, so the same code maps any state, market or network, e.g. `uv run main.py --state OR --network HMO`. The defaults are `--state CA --market group --network PPO`. There are no hardcoded paths: outputs go to `--out` (default `output/`), and the HiLabs supplement is read from `rate_pipeline/reference_data/`.
 
 ## Outputs
 
@@ -53,7 +53,7 @@ Each run downloads fresh data and overwrites these:
 | CMS Doctors & Clinicians (data.cms.gov) | the practice addresses and group affiliations of Medicare-enrolled clinicians; an address source independent of NPPES |
 | IRS Exempt Organizations Business Master File | TIN (EIN) → legal name and registered address for non-profit organizations |
 | NUCC taxonomy code set | taxonomy code → specialty name |
-| HiLabs supplement (`network_mapping/data/hilabs_rate_benchmarking_weights.xlsx`) | taxonomy → HiLabs specialty, specialty weights, specialty-procedure weights (specialty, code coverage) |
+| HiLabs supplement (`rate_pipeline/reference_data/hilabs_rate_benchmarking_weights.xlsx`) | taxonomy → HiLabs specialty, specialty weights, specialty-procedure weights (specialty, code coverage) |
 
 ## Code
 
@@ -61,14 +61,14 @@ Each run downloads fresh data and overwrites these:
 |---|---|
 | `main.py` | entry point: runs the challenges in order and writes the CSVs |
 | `dashboard.py` | Streamlit dashboard over the rate file: executive and analyst views, cost effectiveness (C7) |
-| `network_mapping/downloader.py` | downloads, with timeouts and retries |
-| `network_mapping/plan_index.py` | index parsing, state rules, network-type rules (C1, C2) |
-| `network_mapping/file_quality.py` | file quality metrics and scores (C3) |
-| `network_mapping/rate_file.py` | streams the rate file into the rate CSVs; the rate selection rule (C4, C6) |
-| `network_mapping/npi_registry.py` | NPI Registry lookups |
-| `network_mapping/address_linking.py` | TIN → NPI → address linking across sources (C5) |
-| `network_mapping/specialty_lookup.py` | HiLabs supplement and NUCC taxonomy |
-| `network_mapping/data/` | the HiLabs supplement workbook |
+| `rate_pipeline/downloader.py` | downloads, with timeouts and retries |
+| `rate_pipeline/plan_index.py` | index parsing, state rules, network-type rules (C1, C2) |
+| `rate_pipeline/file_quality.py` | file quality metrics and scores (C3) |
+| `rate_pipeline/rate_file.py` | streams the rate file into the rate CSVs; the rate selection rule (C4, C6) |
+| `rate_pipeline/npi_registry.py` | NPI Registry lookups |
+| `rate_pipeline/address_linking.py` | TIN → NPI → address linking across sources (C5) |
+| `rate_pipeline/specialty_lookup.py` | HiLabs supplement and NUCC taxonomy |
+| `rate_pipeline/reference_data/` | the HiLabs supplement workbook |
 
 **Scalability:**
 - **Streaming:** the rate file is read with `ijson` one item at a time and never loaded whole. It's graded while it streams. Its fields are discovered from the file itself, so a file with extra or different fields is still extracted in full.

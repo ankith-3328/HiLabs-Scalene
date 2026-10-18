@@ -2,8 +2,8 @@ import csv
 import io
 import json
 
-from network_mapping import npi_registry
-from network_mapping.rate_file import (
+from rate_pipeline import npi_registry
+from rate_pipeline.rate_file import (
     choose_rate,
     collector,
     flatten,

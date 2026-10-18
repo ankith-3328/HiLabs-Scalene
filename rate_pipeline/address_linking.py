@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
 
-from network_mapping.downloader import FetchError, fetch
+from rate_pipeline.downloader import FetchError, fetch
 
 DAC_DATASET = "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/mj5m-pzi6"
 IRS_EO = "https://www.irs.gov/pub/irs-soi/eo_{state}.csv"
