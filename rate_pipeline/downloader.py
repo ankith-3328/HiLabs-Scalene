@@ -1,8 +1,12 @@
 """HTTP downloads with timeouts and retries."""
 
+import ssl
 import time
 import urllib.error
 import urllib.request
+
+import certifi
+import truststore
 
 USER_AGENT = "hilabs-scalene-tic-extractor/0.1 (+price transparency research)"
 TIMEOUT_S = 60  # per socket operation, so large files are fine
@@ -10,9 +14,22 @@ ATTEMPTS = 3
 BACKOFF_S = 2.0
 CHUNK = 1 << 20
 
+SSL_CONTEXTS = [truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT), ssl.create_default_context(cafile=certifi.where())]
+SSL_CONTEXTS[-1].load_default_certs()
+
 
 class FetchError(Exception):
     pass
+
+
+def _open(req):
+    for context in SSL_CONTEXTS[:-1]:
+        try:
+            return urllib.request.urlopen(req, timeout=TIMEOUT_S, context=context)
+        except urllib.error.URLError as err:
+            if not isinstance(err.reason, ssl.SSLCertVerificationError):
+                raise
+    return urllib.request.urlopen(req, timeout=TIMEOUT_S, context=SSL_CONTEXTS[-1])
 
 
 def fetch(url, dest=None):
@@ -25,7 +42,7 @@ def fetch(url, dest=None):
     for attempt in range(1, ATTEMPTS + 1):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=TIMEOUT_S) as resp:
+            with _open(req) as resp:
                 if dest is None:
                     return resp.read()
                 size = 0

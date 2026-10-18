@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+import ssl
 import tempfile
 import urllib.error
 from datetime import date, timedelta
@@ -76,7 +77,7 @@ def _serve(monkeypatch, responses):
     """Patch urlopen: responses is a dict (url -> body) or a list of outcomes in call order."""
     calls = []
 
-    def urlopen(req, timeout):
+    def urlopen(req, timeout, context=None):
         calls.append(req.full_url)
         if isinstance(responses, dict):
             if req.full_url not in responses:
@@ -223,3 +224,18 @@ def test_several_rate_files_are_processed_in_parallel_processes(tmp_path, monkey
     # same NPI/TIN/code in both files: merged into one row of the rate file
     [row] = _xlsx(tmp_path / "out" / "1_ppo_rate_file.xlsx")
     assert (row["NPI"], row["Rate"]) == ("1770688129", 150.61)
+
+
+def test_fetch_falls_back_to_certifi_on_certificate_errors(monkeypatch):
+    used = []
+
+    def urlopen(req, timeout, context=None):
+        used.append(context)
+        if context is downloader.SSL_CONTEXTS[0]:
+            raise urllib.error.URLError(ssl.SSLCertVerificationError("self-signed certificate in certificate chain"))
+        return FakeResp(b"ok")
+
+    monkeypatch.setattr(downloader.urllib.request, "urlopen", urlopen)
+    assert downloader.fetch("https://x") == b"ok"
+    assert used == downloader.SSL_CONTEXTS
+

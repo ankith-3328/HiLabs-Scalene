@@ -5,10 +5,12 @@ description = "Centene price transparency: network mapping and rate file extract
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "certifi>=2026.7.22",
     "ijson>=3.6.0",
     "openpyxl>=3.1.5",
     "pandas>=3.0.6",
     "streamlit>=1.66.0",
+    "truststore>=0.10.5",
 ]
 
 [dependency-groups]
